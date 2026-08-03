@@ -1,6 +1,5 @@
 from pathlib import Path
 from bs4 import BeautifulSoup, NavigableString
-import json
 import re
 
 
@@ -144,6 +143,22 @@ def extract_deck(html_path: Path):
     return records
 
 
+def write_markdown(records, output_path):
+    output_path = Path(output_path)
+
+    with output_path.open("w", encoding="utf-8") as f:
+        current_file = None
+
+        for r in records:
+            if r["file"] != current_file:
+                current_file = r["file"]
+                f.write(f"\n# {current_file}\n\n")
+
+            f.write(f"## Slide {r['slide']}: {r['title']}\n\n")
+            f.write(r["content"])
+            f.write("\n\n")
+
+
 def process_directory(input_dir: str, output_path: str):
     input_dir = Path(input_dir)
     output_path = Path(output_path)
@@ -154,9 +169,7 @@ def process_directory(input_dir: str, output_path: str):
         records = extract_deck(html_path)
         all_records.extend(records)
 
-    with output_path.open("w", encoding="utf-8") as f:
-        for record in all_records:
-            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    write_markdown(all_records, output_path)
 
     print(f"Wrote {len(all_records)} slide records to {output_path}")
 
@@ -164,5 +177,5 @@ def process_directory(input_dir: str, output_path: str):
 if __name__ == "__main__":
     process_directory(
         input_dir="html_decks",
-        output_path="extracted_slides.jsonl"
+        output_path="extracted_slides.md"
     )
