@@ -1,3 +1,6 @@
+html_decks/
+extracted_slides.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
