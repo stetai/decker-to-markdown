@@ -31,9 +31,9 @@ def replace_math_with_latex(soup: BeautifulSoup):
             latex = max(latex_candidates, key=len)
 
             if is_display:
-                replacement = f"\n\$$\n{latex}\n\$$\n"
+                replacement = f"\n$$\n{latex}\n$$\n"
             else:
-                replacement = f"\${latex}\$"
+                replacement = f"${latex}$"
 
             math_span.replace_with(NavigableString(replacement))
         else:
